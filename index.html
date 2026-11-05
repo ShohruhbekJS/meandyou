@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Ruhshona, coffee+ with me?</title>
+    <style>
+      :root {
+        --bg1: #ffe6ec;
+        --bg2: #ffc9d8;
+        --bg3: #ffe9d6;
+        --card: rgba(255, 250, 251, 0.88);
+        --ink: #3a1f1c;
+        --muted: #7a5a58;
+        --accent: #d6336c;
+        --accent-ink: #fff;
+        --line: #f1c4d0;
+        --chip: #fff0f4;
+        --cup: #5a2e24;
+        --blob: #ff8fb1;
+        --blob2: #ffc48a;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg1: #2a1218;
+          --bg2: #3b1823;
+          --bg3: #2f1a14;
+          --card: rgba(52, 26, 34, 0.88);
+          --ink: #ffeef2;
+          --muted: #d6aab6;
+          --accent: #ff6b9a;
+          --accent-ink: #2a1218;
+          --line: #5a2c3a;
+          --chip: #432230;
+          --cup: #e8b9a0;
+          --blob: #a8325a;
+          --blob2: #8a5a2b;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg1: #2a1218;
+        --bg2: #3b1823;
+        --bg3: #2f1a14;
+        --card: rgba(52, 26, 34, 0.88);
+        --ink: #ffeef2;
+        --muted: #d6aab6;
+        --accent: #ff6b9a;
+        --accent-ink: #2a1218;
+        --line: #5a2c3a;
+        --chip: #432230;
+        --cup: #e8b9a0;
+        --blob: #a8325a;
+        --blob2: #8a5a2b;
+        color-scheme: dark;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+        height: 100%;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        position: relative;
+        -webkit-tap-highlight-color: transparent;
+        background: linear-gradient(
+          135deg,
+          var(--bg1),
+          var(--bg2),
+          var(--bg3),
+          var(--bg1)
+        );
+        background-size: 300% 300%;
+        animation: drift 18s ease-in-out infinite;
+        color: var(--ink);
+        font-family:
+          "Nunito",
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        overflow-x: hidden;
+      }
+      @keyframes drift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+      #bg {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.55;
+        animation: float 14s ease-in-out infinite;
+      }
+      .b1 {
+        width: 340px;
+        height: 340px;
+        background: var(--blob);
+        top: -80px;
+        left: -90px;
+      }
+      .b2 {
+        width: 300px;
+        height: 300px;
+        background: var(--blob2);
+        bottom: -90px;
+        right: -70px;
+        animation-delay: -6s;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(40px, 30px);
+        }
+      }
+      .p {
+        position: absolute;
+        bottom: -40px;
+        opacity: 0;
+        animation: rise linear infinite;
+        will-change: transform;
+      }
+      @keyframes rise {
+        0% {
+          transform: translate(0, 0) rotate(0);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.75;
+        }
+        90% {
+          opacity: 0.6;
+        }
+        100% {
+          transform: translate(var(--sway), -115vh) rotate(var(--rot));
+          opacity: 0;
+        }
+      }
+      .card {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 440px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 32px 26px 28px;
+        text-align: center;
+        box-shadow: 0 18px 50px rgba(214, 51, 108, 0.22);
+      }
+      h1 {
+        font-family: "Fraunces", "Georgia", serif;
+        font-weight: 600;
+        font-size: clamp(1.7rem, 6vw, 2.1rem);
+        line-height: 1.2;
+        margin: 14px 0 10px;
+      }
+      p {
+        margin: 0 0 22px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .cup {
+        width: 96px;
+        height: 96px;
+        margin: 0 auto;
+        display: block;
+      }
+      .steam path {
+        stroke: var(--accent);
+        stroke-width: 3;
+        fill: none;
+        stroke-linecap: round;
+        opacity: 0;
+        animation: steam 2.8s ease-in-out infinite;
+      }
+      .steam path:nth-child(2) {
+        animation-delay: 0.9s;
+      }
+      .steam path:nth-child(3) {
+        animation-delay: 1.8s;
+      }
+      @keyframes steam {
+        0% {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        40% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+      }
+      .row {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        align-items: center;
+        min-height: 64px;
+        flex-wrap: wrap;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+        touch-action: manipulation;
+        border: 0;
+        border-radius: 999px;
+        padding: 14px 30px;
+        font-weight: 700;
+        font-size: 1.05rem;
+      }
+      button:focus-visible,
+      input:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+      }
+      .yes {
+        background: var(--accent);
+        color: var(--accent-ink);
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+        box-shadow: 0 8px 20px rgba(214, 51, 108, 0.35);
+      }
+      .yes:active {
+        transform: scale(0.96);
+      }
+      .no {
+        background: var(--chip);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        transition:
+          left 0.22s ease,
+          top 0.22s ease;
+      }
+      .no.run {
+        position: fixed;
+        z-index: 10;
+      }
+      .hidden {
+        display: none !important;
+      }
+      label {
+        display: block;
+        font-weight: 700;
+        margin: 0 0 8px;
+        text-align: left;
+      }
+      input[type="date"] {
+        width: 100%;
+        font: inherit;
+        padding: 13px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: var(--chip);
+        color: var(--ink);
+        margin-bottom: 20px;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 22px;
+      }
+      .chip {
+        background: var(--chip);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        padding: 10px 16px;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-color: var(--accent);
+      }
+      .full {
+        width: 100%;
+      }
+      .full[disabled] {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .summary {
+        background: var(--chip);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px;
+        margin-bottom: 18px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--ink);
+      }
+      .ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        margin-top: 10px;
+      }
+      .note {
+        font-size: 0.85rem;
+        margin-top: 14px;
+        margin-bottom: 0;
+      }
+      @media (max-width: 480px) {
+        body {
+          padding: 14px;
+        }
+        .card {
+          padding: 26px 18px 22px;
+          border-radius: 24px;
+        }
+        .cup {
+          width: 80px;
+          height: 80px;
+        }
+        .row {
+          gap: 10px;
+        }
+        button {
+          padding: 14px 24px;
+        }
+        .chip {
+          padding: 10px 14px;
+        }
+        .blob {
+          filter: blur(48px);
+        }
+        .b1 {
+          width: 240px;
+          height: 240px;
+        }
+        .b2 {
+          width: 220px;
+          height: 220px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        body,
+        .blob,
+        .steam path,
+        .p {
+          animation: none;
+        }
+        .steam path {
+          opacity: 0.6;
+        }
+        .no {
+          transition: none;
+        }
+        .p {
+          opacity: 0.5;
+          bottom: auto;
+          top: 20%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bg" aria-hidden="true">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+    </div>
+
+    <main class="card" id="app">
+      <section id="s1">
+        <svg class="cup" viewBox="0 0 96 96" aria-hidden="true">
+          <g class="steam">
+            <path d="M34 26c-6-6 6-10 0-16" />
+            <path d="M48 26c-6-6 6-10 0-16" />
+            <path d="M62 26c-6-6 6-10 0-16" />
+          </g>
+          <path
+            d="M18 38h54v22a20 20 0 0 1-20 20H38A20 20 0 0 1 18 60z"
+            fill="var(--cup)"
+          />
+          <path
+            d="M72 44h6a9 9 0 0 1 0 18h-8"
+            fill="none"
+            stroke="var(--cup)"
+            stroke-width="6"
+            stroke-linecap="round"
+          />
+          <path
+            d="M45 66c-9-6-12-10-6-14 3-2 6 0 6 2 0-2 3-4 6-2 6 4 3 8-6 14z"
+            fill="var(--accent)"
+          />
+          <ellipse cx="45" cy="88" rx="30" ry="4" fill="var(--line)" />
+        </svg>
+        <h1>Ruhshona, will you go for a coffee with me?</h1>
+        <p>
+          No rush, good conversation, and really good coffee. What do you say?
+        </p>
+        <div class="row" id="btnRow">
+          <button class="yes" id="yes">Yes, I’d love to</button>
+          <button class="no" id="no">No</button>
+        </div>
+        <p class="note" id="hint" aria-live="polite"></p>
+      </section>
+
+      <section id="s2" class="hidden">
+        <h1>Yay! When works for you?</h1>
+        <p>Pick a day and a time, and I’ll take care of the rest.</p>
+        <label for="date">Day</label>
+        <input type="date" id="date" />
+        <label id="tl">Time</label>
+        <div class="chips" id="chips" role="group" aria-labelledby="tl"></div>
+        <button class="yes full" id="confirm" disabled>Confirm</button>
+      </section>
+
+      <section id="s3" class="hidden">
+        <svg class="cup" viewBox="0 0 96 96" aria-hidden="true">
+          <g class="steam">
+            <path d="M34 26c-6-6 6-10 0-16" />
+            <path d="M48 26c-6-6 6-10 0-16" />
+            <path d="M62 26c-6-6 6-10 0-16" />
+          </g>
+          <path
+            d="M18 38h54v22a20 20 0 0 1-20 20H38A20 20 0 0 1 18 60z"
+            fill="var(--cup)"
+          />
+          <path
+            d="M72 44h6a9 9 0 0 1 0 18h-8"
+            fill="none"
+            stroke="var(--cup)"
+            stroke-width="6"
+            stroke-linecap="round"
+          />
+        </svg>
+        <h1>It’s a date, Ruhshona!</h1>
+        <div class="summary" id="summary"></div>
+        <button class="yes full" id="send">Send my answer on Telegram</button>
+        <button class="ghost full" id="copy">Copy message</button>
+        <p class="note" id="copied" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        // Put your Telegram username here (without @)
+        var MY_TELEGRAM = "shohruhbek_tolqinjonov";
+
+        var $ = function (id) {
+          return document.getElementById(id);
+        };
+
+        // Background: drifting hearts, coffee and sparkles
+        var bg = $("bg"),
+          icons = ["☕", "💗", "✨", "🤍", "🫘", "💕", "🌸"];
+        var n = window.innerWidth < 600 ? 14 : 24;
+        for (var i = 0; i < n; i++) {
+          var s = document.createElement("span");
+          s.className = "p";
+          s.textContent = icons[i % icons.length];
+          s.style.left = Math.random() * 100 + "%";
+          s.style.fontSize = 14 + Math.random() * 22 + "px";
+          s.style.animationDuration = 12 + Math.random() * 14 + "s";
+          s.style.animationDelay = -Math.random() * 26 + "s";
+          s.style.setProperty("--sway", Math.random() * 120 - 60 + "px");
+          s.style.setProperty("--rot", Math.random() * 80 - 40 + "deg");
+          bg.appendChild(s);
+        }
+
+        var yes = $("yes"),
+          no = $("no"),
+          hint = $("hint");
+        var tries = 0;
+        var lines = [
+          "No",
+          "Are you sure?",
+          "Think again",
+          "Please…",
+          "The coffee is getting cold",
+          "You can’t catch me 😏",
+          "Just press Yes",
+          "At least one cup!",
+        ];
+
+        function run(e) {
+          if (e) {
+            e.preventDefault();
+          }
+          tries++;
+          no.classList.add("run");
+          var w = no.offsetWidth,
+            h = no.offsetHeight,
+            m = 16;
+          var maxX = Math.max(m, window.innerWidth - w - m),
+            maxY = Math.max(m, window.innerHeight - h - m);
+          no.style.left = m + Math.random() * (maxX - m) + "px";
+          no.style.top = m + Math.random() * (maxY - m) + "px";
+          no.textContent = lines[Math.min(tries, lines.length - 1)];
+          yes.style.transform =
+            "scale(" +
+            Math.min(window.innerWidth < 480 ? 1.35 : 1.7, 1 + tries * 0.08) +
+            ")";
+          hint.textContent =
+            tries > 3
+              ? "The No button keeps running away, but Yes is right here 🙂"
+              : "";
+        }
+        ["pointerenter", "touchstart", "mousedown", "click", "focus"].forEach(
+          function (ev) {
+            no.addEventListener(ev, run, { passive: false });
+          },
+        );
+
+        var date = $("date"),
+          chips = $("chips"),
+          confirmBtn = $("confirm"),
+          picked = "";
+        var today = new Date(),
+          iso = function (d) {
+            return (
+              d.getFullYear() +
+              "-" +
+              String(d.getMonth() + 1).padStart(2, "0") +
+              "-" +
+              String(d.getDate()).padStart(2, "0")
+            );
+          };
+        date.min = iso(today);
+        ["10:00", "12:00", "15:00", "17:00", "19:00", "20:30"].forEach(
+          function (t) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "chip";
+            b.textContent = t;
+            b.setAttribute("aria-pressed", "false");
+            b.onclick = function () {
+              picked = t;
+              [].forEach.call(chips.children, function (c) {
+                c.setAttribute("aria-pressed", c === b ? "true" : "false");
+              });
+              check();
+            };
+            chips.appendChild(b);
+          },
+        );
+        function check() {
+          confirmBtn.disabled = !(date.value && picked);
+        }
+        date.addEventListener("input", check);
+
+        yes.addEventListener("click", function () {
+          $("s1").classList.add("hidden");
+          no.classList.add("hidden");
+          $("s2").classList.remove("hidden");
+        });
+
+        var days = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        var months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        var msg = "";
+        confirmBtn.addEventListener("click", function () {
+          var p = date.value.split("-"),
+            d = new Date(+p[0], +p[1] - 1, +p[2]);
+          var when =
+            days[d.getDay()] +
+            ", " +
+            months[d.getMonth()] +
+            " " +
+            +p[2] +
+            " at " +
+            picked;
+          $("summary").textContent = when;
+          msg =
+            "It’s Ruhshona. Yes, I’d love to have coffee with you ☕ " +
+            when +
+            ". See you there!";
+          $("s2").classList.add("hidden");
+          $("s3").classList.remove("hidden");
+        });
+
+        $("send").addEventListener("click", function () {
+          var url = MY_TELEGRAM
+            ? "https://t.me/" + MY_TELEGRAM
+            : "https://t.me/share/url?url=" +
+              encodeURIComponent(" ") +
+              "&text=" +
+              encodeURIComponent(msg);
+          try {
+            if (MY_TELEGRAM && navigator.clipboard) {
+              navigator.clipboard.writeText(msg);
+            }
+          } catch (e) {}
+          window.open(url, "_blank", "noopener");
+          if (MY_TELEGRAM) {
+            $("copied").textContent = "Message copied. Paste it in the chat.";
+          }
+        });
+        $("copy").addEventListener("click", function () {
+          var done = function (ok) {
+            $("copied").textContent = ok
+              ? "Copied ✓"
+              : "Couldn’t copy. Here’s the text: " + msg;
+          };
+          try {
+            navigator.clipboard.writeText(msg).then(
+              function () {
+                done(true);
+              },
+              function () {
+                done(false);
+              },
+            );
+          } catch (e) {
+            done(false);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
